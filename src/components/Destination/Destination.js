@@ -7,11 +7,12 @@ const Destination = (props) => {
     const{name, image, person, price} = props.selectVehicles;
     console.log(props.selectVehicles.name);
 
-    // const handleSearchBtn = () => {
-    //     const style = {
-    //         display: 'none'
-    //     }
-    // }
+
+    const handleSearch = () => {
+        const style = {
+            display: 'none'
+        }
+    }
 
     return (
         <div className="styleDestination">
@@ -21,7 +22,7 @@ const Destination = (props) => {
                     <input id="from" type="text"/>
                     <label htmlFor="to">Pick To</label>
                     <input id="to" type="text"/>
-                    <button style={{display:'block'}} className="btn">Search</button>
+                    <button onClick={handleSearch} style={{display:'block'}} className="btn">Search</button>
                 </div>
                 <div >
                     <div className="riderOption">

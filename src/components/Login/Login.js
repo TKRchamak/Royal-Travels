@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from './firebase.config';
@@ -13,7 +13,17 @@ const Login = () => {
     firebase.initializeApp(firebaseConfig);
     }   
 
+    const[newUser, setNewUser] = useState(false);
+
     const[loggedInUser, setLoggedInUser] = useContext(UserContext)
+
+    const [user,setUser] = useState({
+        isSignIn: false,
+        newUser: false,
+        name: "",
+        email: "",
+        password: ""
+      })
 
 
     const GoogleSignInHandler = () => {
@@ -21,16 +31,16 @@ const Login = () => {
             // debugger
             firebase.auth().signInWithPopup(provider)
             .then((result) => {
-                /** @type {firebase.auth.OAuthCredential} */
-                var credential = result.credential;
-
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                var token = credential.accessToken;
-                // The signed-in user info.
                 var user = result.user;
                 // ...
+                const signInUser = {
+                    isSignIn: true,
+                    name: user.displayName,
+                    email: user.email
+                }
                 console.log(user);
                 setLoggedInUser(user.displayName);
+                setUser(signInUser);
             })
             .catch((error) => {
                 // Handle Errors here.
@@ -82,27 +92,109 @@ const Login = () => {
     //     }
     //     event.preventDefault();
     //   }
-  
 
+
+    
+
+
+  const CheckInputValue =(event)=> {
+    let isInputHandel = true;
+    if (event.target.name === 'email') {
+        isInputHandel = /\S+@\S+\.\S+/.test(event.target.value);
+    };
+    if (event.target.name === 'password') {
+        isInputHandel = event.target.value.length >= 6 ;
+    }
+    if (isInputHandel) {
+        const newUserSet = {...user};
+        newUserSet[event.target.name] = event.target.value;
+        setUser(newUserSet);
+        // setLoggedInUser(newUserSet.name)
+    }
+  }
+  const handleSubmit =(event)=> {
+    if (newUser && user.email && user.password) {
+        console.log(user.email, user.password, user.name)
+        firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+        .then((res) => {
+            updateUserName(user.name)
+            setLoggedInUser(user.name)
+            console.log(user.name)
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+
+          console.log(error.code, error.message)
+          });
+      }
+      if (!newUser && user.email && user.password) {
+        firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+        .then((res) => {
+            console.log(res.user)
+            // setLoggedInUser(res.user.displayName)
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode, errorMessage)
+        });
+      }
+      event.preventDefault();
+    }
+
+
+    const updateUserName = name => {
+        var user = firebase.auth().currentUser;
+
+        user.updateProfile({
+        displayName: name
+        }).then(function() {
+        // Update successful.
+        }).catch(function(error) {
+        // An error happened.
+        });
+    }
 
     return (
         <div>
             <div style={{ textAlign: "center" }}>
                 <div class='login-form'>
-                    <form  action='submit' method='submit'>
-                        <h2 class='text-center'>Sign in</h2>
+                    <form >
+                        {
+                            newUser ? <h2 class='text-center'>Sign Up</h2>
+                            : <h2 class='text-center'>Sign In</h2>
+                        }
+                        <div class='form-group'>
+                            <input type="checkbox" onClick={()=>setNewUser(!newUser)} name="" id="newUser"/>
+                            <br/>
+                            <label htmlFor="newUser">Create New Account</label>
+                        </div>
+                        {
+                            newUser ? 
+                            <div class='form-group'>
+                                <div class='input-group'>
+                                    <input onBlur={CheckInputValue} type='text' class='form-control' name='name' placeholder='Name' required />
+                                </div>
+                            </div>
+                            : ""
+                            
+                        }
                         <div class='form-group'>
                             <div class='input-group'>
-                                <input type='text' class='form-control' name='email' placeholder='email' required='required' />
+                                <input onBlur={CheckInputValue} type='text' class='form-control' name='email' placeholder='email' required />
                             </div>
-                            </div>
-                        <div class='form-group'>
-                        <div class='input-group'>
-                            <input type='password' class='form-control' name='password' placeholder='Password' required='required'/>
-                        </div>
                         </div>
                         <div class='form-group'>
-                            <button type='submit' class='btn btn-primary login-btn btn-block'> Sign in </button>
+                            <div class='input-group'>
+                                <input onBlur={CheckInputValue} type='password' class='form-control' name='password' placeholder='Password' required/>
+                            </div>
+                        </div>
+                        <div class='form-group'>
+                            {
+                                newUser ? <button onClick={handleSubmit} type='submit' class='btn btn-primary login-btn btn-block'> Sign Up </button>
+                                : <button onClick={handleSubmit} type='submit' class='btn btn-primary login-btn btn-block'> Sign In </button>
+                            }
                         </div>
                         <div class='clearfix'>
                             <label class='float-left form-check-label'>

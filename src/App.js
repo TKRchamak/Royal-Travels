@@ -12,13 +12,13 @@ import Destination from "./components/Destination/Destination";
 import Header from "./components/Header/Header";
 import Home from './components/Home/Home';
 import Login from "./components/Login/Login";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 export const UserContext = createContext();
 
 function App() {
   const[selectVehicles, setSelectVehicles] = useState([])
   const[loggedInUser, setLoggedInUser] = useState([])
-  console.log(selectVehicles)
 
   const vehicleHandler = (vehicle) =>{
     let select = vehicle;
@@ -37,9 +37,9 @@ function App() {
           <Route exact path="/">
             <Home vehicleHandler={vehicleHandler}></Home>
           </Route>
-          <Route path="/Destination">
+          <PrivateRoute path="/Destination">
             <Destination selectVehicles={selectVehicles}></Destination>
-          </Route>
+          </PrivateRoute>
           <Route path="/Login">
             <Login></Login>
           </Route>
