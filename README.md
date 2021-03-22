@@ -1,5 +1,5 @@
 
-# Traveler 
+# Royal Travels 
 
 this is my travelling side
 
