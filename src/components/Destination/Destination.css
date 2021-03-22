@@ -1,0 +1,58 @@
+.styleDestination{
+    display: flex;
+    width: 80%;
+    margin: auto;
+    border-top: 1px solid lightgray;
+    justify-content: space-evenly;
+}
+
+.destinationDetailPart{
+    width: 35%;
+    display: block;
+}
+
+.locationPart{
+    width: 100%;
+    margin: 20px;
+    padding: 20px;
+    display: grid; 
+    height: 290px;
+    text-align: justify;
+    background-color: lightgray;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+
+.riderOption{
+    width: 100%;
+    margin: 20px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+.riderOption img {
+    height: 50px;
+    width: auto;
+}
+
+.locationPart input {
+    padding: 5px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+
+.mapPart{
+    width: 50%;
+    margin: 20px;
+    display: block;
+    text-align: center;
+}
+
+.mapPart img {
+    width: 500px
+}
