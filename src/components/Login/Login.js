@@ -39,7 +39,7 @@ const Login = () => {
                     email: user.email
                 }
                 console.log(user);
-                setLoggedInUser(user.displayName);
+                setLoggedInUser(user);
                 setUser(signInUser);
             })
             .catch((error) => {
@@ -118,7 +118,7 @@ const Login = () => {
         firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
         .then((res) => {
             updateUserName(user.name)
-            setLoggedInUser(user.name)
+            setLoggedInUser(user)
             console.log(user.name)
         })
         .catch((error) => {
